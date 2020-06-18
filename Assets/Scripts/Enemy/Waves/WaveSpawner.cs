@@ -14,10 +14,5 @@ namespace MagicSpace.NinjaDash
         {
             var wave = GameObject.Instantiate(waves[Random.Range(0, waves.Count)], waveSpawn[Random.Range(0, waveSpawn.Count)]);
         }
-
-        private void Start()
-        {
-            SpawnWave();
-        }
     }
 }

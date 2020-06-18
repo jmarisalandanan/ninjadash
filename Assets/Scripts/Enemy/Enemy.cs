@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 namespace MagicSpace.NinjaDash
 {
@@ -7,6 +8,8 @@ namespace MagicSpace.NinjaDash
     {
         public VectorUnityEvent OnEnemyMove;
         public EnemyUnityEvent OnEnemyDie;
+        public UnityEvent OnCounterStart;
+        public EnemyUnityEvent OnCounterEnd;
 
         public void Spawn(Vector3 targetPos)
         {
@@ -18,5 +21,15 @@ namespace MagicSpace.NinjaDash
             OnEnemyDie.Invoke(this);
         }
 
+        public void StartCounteringPhase()
+        {
+            Debug.Log("Starting counter phase");
+            OnCounterStart.Invoke();
+        }
+
+        public void EndCounteringPhase()
+        {
+            OnCounterEnd.Invoke(this);
+        }
     }
 }
