@@ -31,17 +31,21 @@ namespace MagicSpace.NinjaDash
         {
             // Get Random enemy
             waveEnemies.FYShuffle();
-            for (int i = 0; i <= COUNTERING_ENEMY_PER_WAVE; i++)
+            for (int i = 0; i < COUNTERING_ENEMY_PER_WAVE; i++)
             {
                 var enemy = waveEnemies[i];
-                enemy.StartCounteringPhase();
-                enemy.OnCounterEnd.AddListener(EnemyCounterEnds);
+                if (!enemy.IsDead)
+                {
+                    enemy.PrepareCounterPhase();
+                    enemy.OnCounterEnd.AddListener(EnemyCounterEnds);
+                }
             }
         }
 
         private void EnemyCounterEnds(Enemy enemy)
         {
             enemy.OnCounterEnd.RemoveListener(EnemyCounterEnds);
+            InitiateCountering();
         }
 
         private void Awake()
