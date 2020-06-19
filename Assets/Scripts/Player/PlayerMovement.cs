@@ -11,17 +11,15 @@ namespace MagicSpace.NinjaDash
         [SerializeField]
         private float maxDashDistance;
         [SerializeField]
+        private float maxKnockbackDistance;
+        [SerializeField]
         private IntVariable playerMoves;
-        [SerializeField]
-        private float linearDragAfterKill;
-        [SerializeField]
-        private float dragDuration;
 
-        private float currentDragTime;
-        private float defaultDragValue;
-        private bool isKillBufferActive = false;
         private bool isDashing = false;
+        private bool isKnockBack = false;
+
         private Vector3 dashOriginPos;
+        private Vector3 lastDashDir;
 
         private Rigidbody2D thisRigidbody;
         private Transform thisTransform;
@@ -35,7 +33,7 @@ namespace MagicSpace.NinjaDash
                 return;
             }
 
-            if (isDashing)
+            if (isDashing || isKnockBack)
             {
                 return;
             }
@@ -43,6 +41,7 @@ namespace MagicSpace.NinjaDash
             Stop();
 
             isDashing = true;
+            lastDashDir = direction;
             dashOriginPos = thisTransform.position;
             thisRigidbody.AddForce(direction * dashPower, ForceMode2D.Impulse);
             OnDash.Invoke();
@@ -51,36 +50,22 @@ namespace MagicSpace.NinjaDash
         public void Stop()
         {
             thisRigidbody.velocity = Vector3.zero;
-            isKillBufferActive = false;
-            thisRigidbody.drag = defaultDragValue;
             isDashing = false;
+            isKnockBack = false;
         }
 
-        public void KillBuffer()
+        public void KnockBack()
         {
-            thisRigidbody.drag = linearDragAfterKill;
-            isKillBufferActive = true;
-            currentDragTime = 0;
+            Stop();
+            dashOriginPos = thisTransform.position;
+            thisRigidbody.AddForce((lastDashDir * (dashPower)) * -1f, ForceMode2D.Impulse);
+            isKnockBack = true;
         }
 
-        private void LerpKillBuffer()
+        private void CheckDashDistance(float distance)
         {
-            currentDragTime += Time.deltaTime;
-            if (currentDragTime > dragDuration)
-            {
-                currentDragTime = dragDuration;
-                isKillBufferActive = false;
-                thisRigidbody.drag = defaultDragValue;
-            }
-
-            var lerpPercentage = currentDragTime / dragDuration;
-            thisRigidbody.drag = Mathf.Lerp(linearDragAfterKill, defaultDragValue, lerpPercentage);
-        }
-
-        private void CheckDashDistance()
-        {
-            var currentDist = Vector3.Distance(dashOriginPos, transform.position);
-            if (currentDist >= maxDashDistance)
+            var currentDist = Vector3.Distance(dashOriginPos, thisTransform.position);
+            if (currentDist >= distance)
             {
                 Stop();
             }
@@ -91,19 +76,17 @@ namespace MagicSpace.NinjaDash
             Debug.Assert(dashPower > 0, "dashPower must be a value higher than zero!");
             thisRigidbody = this.GetComponent<Rigidbody2D>();
             thisTransform = transform;
-            defaultDragValue = thisRigidbody.drag;
         }
 
         private void Update()
         {
-            if (isKillBufferActive)
-            {
-                LerpKillBuffer();
-            }
-
             if (isDashing)
             {
-                CheckDashDistance();
+                CheckDashDistance(maxDashDistance);
+            }
+            if (isKnockBack)
+            {
+                CheckDashDistance(maxKnockbackDistance);
             }
         }
     }

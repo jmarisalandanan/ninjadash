@@ -9,7 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c6cbf8c4b3d64fba9fccc0b9d07dcb6, type: 3}
-  m_Name: PlayerLife
+  m_Script: {fileID: 11500000, guid: 2fabb11c9b6fc4fbea9a2ddfb0a9fbd5, type: 3}
+  m_Name: OnPlayerCountered
   m_EditorClassIdentifier: 
-  value: 1.5

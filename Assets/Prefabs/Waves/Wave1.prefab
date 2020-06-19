@@ -190,7 +190,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 4708923493987736453, guid: 3e1967361462943988105ddad0d7f35a,
     type: 3}
-  enemyContainer: {fileID: 0}
   OnEnemySpawn:
     m_PersistentCalls:
       m_Calls:

@@ -9,7 +9,7 @@ namespace MagicSpace.NinjaDash
         [SerializeField]
         private EnemyUnityEvent OnEnemySpawn;
 
-        public void SpawnEnemy(Transform point)
+        public Enemy SpawnEnemy(Transform point)
         {
             var spawn = GameObject.Instantiate(enemyPrefab, point);
             var spawnPos = transform.position;
@@ -26,6 +26,7 @@ namespace MagicSpace.NinjaDash
             spawn.Spawn(point.position);
 
             OnEnemySpawn.Invoke(spawn);
+            return spawn;
         }
 
     }
