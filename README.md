@@ -1,1 +1,3 @@
 # Ninja Dash
+
+Discontinued prototype
